@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- binding data example begin -->
+        <span fast-text="q">Hello world</span>
+        <p fast-text="w">Hello world</p>
+        <h6 fast-text="e">Hello world</h6>
+        <h2 fast-text="r">Hello world</h2>
+        <span fast-text="t">Hello world</span>
+        <h3 fast-text="y">Hello world</h3>
+    <!-- binding data example end -->
+    <!-- two way binding data example begin -->
+        <input fast-model="q" />
+        <p fast-text="q">Hello world</p>
+        <textarea fast-model="q"></textarea>
+        <p fast-text="r">Hello world</p>
+    <!-- two way binding data example end -->
+    <!-- <script type="text/javascript" src="core/index.min.js">
+        /*
+            fast core
+        */
+    </script> -->
+    <script>
+        /*
+            hooks
+        */
+        const mountedHook = () => {
+            
+        }
+
+        const destroyHook = () => {
+            
+        }
+
+        /*
+            classes
+        */
+
+        class Fast {
+            
+            box = {}
+            
+            constructor (options) {
+                console.log(`создаю Fast с настройками: ${options}`)
+                let optionsKeys = Object.keys(options)
+                let optionsValues = Object.values(options)
+                optionsKeys.map((option, optionIndex) => {
+                    console.log(`Настройка: ${option}`)
+                    if (option === 'box') {
+                        let customBox = optionsValues[optionIndex]
+                        if (typeof customBox === 'object') {
+                            console.log(`Коробка - это объект значит все впорядке`)
+                            this.box = customBox
+                        } else {
+                            console.log(`Коробка должна быть объектом с данными: ${typeof optionsValues[optionIndex]}`)
+                        }
+                    }
+                })
+                setInterval(() => this.detectCustomElements(), 1000)
+            }
+
+            openBox() {
+                return this.box
+            }
+
+            detectCustomElements() {
+                let customElements = Object.values(document.body.children)
+                customElements.map(element => {
+                    let isElementWantOpenBox = element.getAttribute('fast-text')
+                    let isElementWantToggleBox = element.getAttribute('fast-model')
+                    if (isElementWantOpenBox) {
+                        let supportedElements = [
+                            'SPAN',
+                            'P',
+                            'H1',
+                            'H2',
+                            'H3',
+                            'H4',
+                            'H5',
+                            'H6',
+                        ]
+                        if (supportedElements.includes(element.tagName)) {
+                            element.textContent = this.box[isElementWantOpenBox]
+                        }
+                    } else if (isElementWantToggleBox) {
+                        let supportedElements = [
+                            'INPUT',
+                            'TEXTAREA',
+                        ]
+                        if (supportedElements.includes(element.tagName)) {
+                            element.value = this.box[isElementWantToggleBox]
+                            element.addEventListener('change', (event) => {
+                                this.box[isElementWantToggleBox] = event.target.value
+                            })
+                        }
+                    }
+                })
+            }
+
+        }
+
+        window.onload = () => mountedHook()
+        window.onclose = () => destroyHook()
+
+        let fastOptions = {
+            box: {
+                q: 'Fast is',
+                w: ' ',
+                e: 'best framework',
+                r: ' ',
+                t: 'for frontend developers',
+                y: '!!!',
+            }
+        }
+        let fastInst = new Fast(fastOptions)
+
+    </script>
+
+</body>
+</html>
