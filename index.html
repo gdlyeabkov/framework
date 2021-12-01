@@ -13,7 +13,11 @@
         <h6 fast-text="e">Hello world</h6>
         <h2 fast-text="r">Hello world</h2>
         <span fast-text="t">Hello world</span>
-        <h3 fast-text="y">Hello world</h3>
+        <h3>{{
+            y
+        }}</h3>
+        <h3>{{y|bang}}</h3>
+        
     <!-- binding data example end -->
     <!-- two way binding data example begin -->
         <input fast-model="q" />
@@ -31,127 +35,39 @@
             <h1>i am nest</h1>
         </MainPage>
     <!-- nested components example end -->
-    <!-- <script type="text/javascript" src="core/index.min.js">
+    <!-- events example begin -->
+    <p @click="helloMan" @mouseenter="helloMan" @mouseleave="helloMan">Click me</p>
+    <!-- events example end -->
+
+    <script type="text/javascript" src="core/index.min.js">
         /*
             fast core
         */
-    </script> -->
+    </script>
     <script>
-        /*
-            hooks
-        */
-        const mountedHook = () => {
-            
-        }
-
-        const destroyHook = () => {
-            
-        }
-
-        /*
-            classes
-        */
-
-        class Fast {
-            
-            box = {}
-            components = []
-            isComponentsLoad = false
-
-            constructor (options) {
-                console.log(`создаю Fast с настройками: ${options}`)
-                let optionsKeys = Object.keys(options)
-                let optionsValues = Object.values(options)
-                optionsKeys.map((option, optionIndex) => {
-                    console.log(`Настройка: ${option}`)
-                    if (option === 'box') {
-                        let customBox = optionsValues[optionIndex]
-                        if (typeof customBox === 'object') {
-                            console.log(`Коробка - это объект значит все впорядке`)
-                            this.box = customBox
-                        } else {
-                            console.log(`Коробка должна быть объектом с данными: ${typeof optionsValues[optionIndex]}`)
-                        }
-                    } else if (option === 'components') {
-                        let customComponents = optionsValues[optionIndex]
-                        this.components = customComponents
-                        if (typeof customComponents === 'object' && customComponents[0] !== undefined) {
-                            console.log(`Компоненты - это массив значит все впорядке`)
-                        } else {
-                            console.log(`Компоненты должны быть массивом с данными: ${typeof optionsValues[optionIndex]}`)
-                        }
-                    }
-                })
-                setInterval(() => this.detectCustomElements(), 1000)
-            }
-
-            openBox() {
-                return this.box
-            }
-
-            detectCustomElements() {
-                let customElements = Object.values(document.body.children)
-                customElements.map(element => {
-                    let isElementWantOpenBox = element.getAttribute('fast-text')
-                    let isElementWantToggleBox = element.getAttribute('fast-model')
-                    let isElementWantComponent = element.hasAttribute('data-component')
-                    if (isElementWantOpenBox) {
-                        let supportedElements = [
-                            'SPAN',
-                            'P',
-                            'H1',
-                            'H2',
-                            'H3',
-                            'H4',
-                            'H5',
-                            'H6',
-                        ]
-                        if (supportedElements.includes(element.tagName)) {
-                            element.textContent = this.box[isElementWantOpenBox]
-                        }
-                    } else if (isElementWantToggleBox) {
-                        let supportedElements = [
-                            'INPUT',
-                            'TEXTAREA',
-                        ]
-                        if (supportedElements.includes(element.tagName)) {
-                            element.value = this.box[isElementWantToggleBox]
-                            element.addEventListener('change', (event) => {
-                                this.box[isElementWantToggleBox] = event.target.value
-                            })
-                        }
-                    } else if (!this.isComponentsLoad) {
-                        let allChildrens = Object.values(document.body.children)
-                        let registerdComponentsNames = this.components.map(element => element.name.toUpperCase())
-                        allChildrens.map((component, componentIdx) => {
-                            if (registerdComponentsNames.includes(component.tagName)) {
-                                let nestedContent = component.innerHTML
-                                component.innerHTML = ''
-                                let customComponent = document.createElement(component.tagName)
-                                let componentTemplate = this.components.filter(otherComponent => otherComponent.name.toUpperCase() === component.tagName)[0].template
-                                // if (Object.values(componentTemplate.children).) 
-                                customComponent.innerHTML = componentTemplate.replaceAll('<fast-nest />', nestedContent)
-                                document.body.insertBefore(customComponent, allChildrens[componentIdx + 1])
-                            }
-                        })
-                        this.isComponentsLoad = true
-                    }
-                })
-            }
-
-        }
-
-        window.onload = () => mountedHook()
-        window.onclose = () => destroyHook()
-
+        
         let fastOptions = {
             box: {
                 q: 'Fast is',
-                w: 'mega',
+                w: ' ',
                 e: 'best framework',
-                r: 'super',
+                r: ' ',
                 t: 'for frontend developers',
                 y: '!!!',
+            },
+            updated: null,
+            methods: {
+                customhook() {
+                    alert('customhook is called')
+                },
+                helloMan() {
+                    alert('What s up')
+                }
+            },
+            filters: {
+                bang(stream) {
+                    return `${stream}!!!`
+                }
             },
             components: [
             {
@@ -169,6 +85,7 @@
             ]
         }
         let fastInst = new Fast(fastOptions)
+        fastInst.box
 
     </script>
 
